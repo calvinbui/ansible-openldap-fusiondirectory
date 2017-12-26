@@ -1,0 +1,17 @@
+---
+
+- name: Pull FusionDirectory image
+  docker_container:
+    name: fusiondirectory
+    image: hrektts/fusiondirectory:latest
+    state: started
+    recreate: yes
+    restart_policy: unless-stopped
+    published_ports:
+      - 80:80
+    links:
+      openldap:openldap
+    env:
+      LDAP_DOMAIN: "{{ openldap_domain }}"
+      LDAP_HOST: openldap
+      LDAP_ADMIN_PASSWORD: "{{ openldap_admin_password }}"

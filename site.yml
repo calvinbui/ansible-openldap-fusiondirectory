@@ -1,0 +1,26 @@
+---
+
+- hosts: ldap
+
+  vars_files:
+    - vars/ssh.yml
+
+  roles:
+    # - ubuntu-setup
+    # - docker
+    - openldap
+    - fusiondirectory
+
+  post_tasks:
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+        get_md5: no
+      register: reboot_required
+    - name: Restart if reboot is required
+      shell: sleep 2 && reboot
+      async: 1
+      poll: 0
+      ignore_errors: true
+      become: true
+      when: reboot_required.stat.exists == true

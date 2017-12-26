@@ -1,0 +1,21 @@
+---
+
+- name: Pull OpenLDAP image
+  docker_container:
+    name: openldap
+    image: hrektts/fusiondirectory-openldap:latest
+    state: started
+    recreate: yes
+    restart_policy: unless-stopped
+    published_ports:
+      - 389:389
+      - 636:636
+    env:
+      LDAP_ORGANISATION: "Home"
+      LDAP_DOMAIN: "{{ openldap_domain }}"
+      LDAP_ADMIN_PASSWORD: "{{ openldap_admin_password }}"
+      LDAP_CONFIG_PASSWORD: "{{ openldap_config_password }}"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: reader
+      LDAP_READONLY_USER_PASSWORD: "{{ openldap_reader_password }}"
+      FD_ADMIN_PASSWORD: "{{ openldap_fdadmin_password }}"
